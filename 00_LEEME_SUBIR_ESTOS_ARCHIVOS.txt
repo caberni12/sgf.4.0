@@ -1,0 +1,5 @@
+SGF WEB 4.3.37 - PRODUCCION PLANA
+================================
+Subir el contenido de esta carpeta a la raíz del hosting.
+Compatible con Android 3.4.37 / flotas-api 4.3.44 / Base 4.3.36 REV9.
+Aislamiento multiempresa estricto por empresa_id.
