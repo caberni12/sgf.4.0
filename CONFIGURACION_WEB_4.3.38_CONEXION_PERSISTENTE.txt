@@ -1,0 +1,18 @@
+DIRECTORIO/BOOTSTRAP OFICIAL
+https://script.google.com/macros/s/AKfycbzIEXDZ3fxc9wIuAGpm2mmdPYfD-f0GmKxE3v4-tTtzguVr9308mgcm7oQVysRAGIXcFw/exec
+
+URL REAL
+Se obtiene desde el Directorio y queda guardada localmente por origen del navegador.
+
+PERSISTENCIA
+La conexión sobrevive a:
+- cerrar pestaña;
+- cerrar navegador;
+- cerrar sesión de usuario;
+- reiniciar/apagar el computador.
+
+Se pierde únicamente si:
+- el usuario pulsa Limpiar conexión y cambiar empresa;
+- borra los datos/cookies/almacenamiento del sitio;
+- usa navegación privada/incógnito;
+- cambia a otro dominio/origen del sistema.

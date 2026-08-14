@@ -44,7 +44,7 @@
       <form class="tarjeta-acceso conexion-empresa-inicial" id="formularioConexionEmpresa" novalidate>
         <div class="encabezado-formulario encabezado-con-ajuste">
           <div><span class="etiqueta">CONFIGURACIÓN DEL DISPOSITIVO</span><h2>Conectar empresa</h2></div>
-          <button class="icono-ajuste-login" id="abrirConfiguracionEmpresa" type="button" aria-label="Configurar conexión de empresa" title="Configurar conexión">⚙</button>
+          <button class="icono-ajuste-login" id="abrirConfiguracionEmpresa" type="button" aria-label="Ver conexión de empresa" title="Configurar conexión">⚙</button>
         </div>
         <p class="descripcion-conexion-inicial">Este paso se realiza una sola vez. Ingrese el RUT para encontrar internamente la base correspondiente.</p>
         <div class="mensaje-formulario oculto" id="mensajeConexionEmpresa" role="alert"></div>
@@ -126,7 +126,7 @@
         <p>Use esta opción solo cuando cambie la dirección del directorio. Quedará guardada en este dispositivo y ya no requiere modificar el código.</p>
       </div>
       <div class="mensaje-formulario oculto" id="mensajeConexionAvanzada" role="alert"></div>
-      <label class="campo"><span>Dirección HTTPS del directorio</span><input id="urlDirectorioAvanzada" name="urlDirectorio" type="url" inputmode="url" autocomplete="off" required placeholder="https://.../exec"></label>
+      <label class="campo"><span>Directorio oficial de conexión</span><input id="urlDirectorioAvanzada" name="urlDirectorio" type="url" inputmode="url" autocomplete="off" readonly aria-readonly="true"></label>
       <label class="aceptacion-preconfig"><input id="confirmarCambioDirectorio" type="checkbox" required><span>Confirmo que esta dirección corresponde al directorio autorizado del sistema.</span></label>
       <div class="acciones-dialogo-conexion">
         <button class="boton-enlace" id="restaurarDirectorio" type="button">Restaurar dirección predeterminada</button>
@@ -137,8 +137,8 @@
     </form>
   </dialog>
 
-  <script src="configuracion.4337.js?v=web4337"></script>
-  <script src="conexion.4337.js?v=web4337"></script>
-  <script src="acceso.4337.js?v=web4337"></script>
+  <script src="configuracion.4338.js?v=web4337"></script>
+  <script src="conexion.4338.js?v=web4337"></script>
+  <script src="acceso.4338.js?v=web4337"></script>
 </body>
 </html>
