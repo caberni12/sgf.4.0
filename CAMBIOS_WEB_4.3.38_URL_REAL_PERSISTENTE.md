@@ -1,7 +1,7 @@
-# SGF Web 4.3.38
+# SGF Web 4.3.39
 
 ## Directorio oficial fijo
-`https://script.google.com/macros/s/AKfycbzIEXDZ3fxc9wIuAGpm2mmdPYfD-f0GmKxE3v4-tTtzguVr9308mgcm7oQVysRAGIXcFw/exec`
+`https://mykndxvshtfydsetcync.supabase.co/functions/v1/bdempresaflota-api`
 
 ## Flujo
 1. Si no existe conexión empresarial local, Web solicita RUT.

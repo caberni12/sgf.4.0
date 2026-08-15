@@ -1,5 +1,5 @@
 DIRECTORIO/BOOTSTRAP OFICIAL
-https://script.google.com/macros/s/AKfycbzIEXDZ3fxc9wIuAGpm2mmdPYfD-f0GmKxE3v4-tTtzguVr9308mgcm7oQVysRAGIXcFw/exec
+https://mykndxvshtfydsetcync.supabase.co/functions/v1/bdempresaflota-api
 
 URL REAL
 Se obtiene desde el Directorio y queda guardada localmente por origen del navegador.
