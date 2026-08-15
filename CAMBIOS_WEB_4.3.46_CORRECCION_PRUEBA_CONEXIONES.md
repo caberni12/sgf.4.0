@@ -22,7 +22,7 @@ Al sincronizar automáticamente la nueva URL de Actualizaciones:
    conexiones obligatorias ya fueron verificadas.
 
 Nueva URL de Actualizaciones:
-https://script.google.com/macros/s/AKfycbwL3wLzbcVHG1euB4cSxOKzr1k3VR7Ybi3DJrwXriF6UmD7npq3hOOEpzyaRx-OBIRH9w/exec
+[URL ANTERIOR REEMPLAZADA EN WEB 4.3.49]
 
 Directorio conservado:
 https://mykndxvshtfydsetcync.supabase.co/functions/v1/bdempresaflota-api

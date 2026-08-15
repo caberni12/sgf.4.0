@@ -1,7 +1,7 @@
 # SGF Web 4.3.45 · URL oficial de Actualizaciones Android
 
 URL NUEVA:
-https://script.google.com/macros/s/AKfycbwL3wLzbcVHG1euB4cSxOKzr1k3VR7Ybi3DJrwXriF6UmD7npq3hOOEpzyaRx-OBIRH9w/exec
+[URL ANTERIOR REEMPLAZADA EN WEB 4.3.49]
 
 DIRECTORIO BDEMPRESAFLOTA (SIN CAMBIOS):
 https://mykndxvshtfydsetcync.supabase.co/functions/v1/bdempresaflota-api
