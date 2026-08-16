@@ -1,0 +1,13 @@
+SGF WEB 4.3.57
+
+CAMBIO:
+- Filtro rápido por nombre, RUT, correo o ID en el modal Reasignar la misma ruta.
+- La lista se filtra en tiempo real y solo contiene conductores disponibles devueltos por la API.
+
+INSTALACION:
+- Reemplazar la carpeta Web anterior por esta versión completa.
+- Hacer Ctrl+F5 una vez después de publicar.
+
+NO REQUIERE:
+- SQL nuevo.
+- Cambio de flotas-api.

@@ -1,0 +1,22 @@
+SGF WEB 4.3.57 · VALIDACION FILTRO RAPIDO REASIGNACION
+
+[OK] sgf-module.4357.js: sintaxis JavaScript válida.
+[OK] Fuente decodificada del bundle: sintaxis JavaScript válida.
+[OK] Bundle codificado decodifica byte-a-byte igual al fuente validado.
+[OK] 27 archivos HTML conservados.
+[OK] 24 módulos funcionales cargan sgf-module.4357.js.
+[OK] 0 HTML funcionales referencian sgf-module.4356.js.
+[OK] sgf-performance.4357.js: sintaxis JavaScript válida.
+[OK] sw-sgf-4357.js: sintaxis JavaScript válida.
+[OK] 14 archivos JavaScript de producción revisados: 0 errores de sintaxis.
+[OK] Reasignación incluye campo "Filtro rápido de conductor".
+[OK] Búsqueda por nombre, RUT, correo e ID.
+[OK] Normalización de mayúsculas/minúsculas y tildes.
+[OK] Contador de coincidencias visible.
+[OK] Sin coincidencias: selector y confirmación quedan deshabilitados.
+[OK] Los candidatos siguen limitados a los conductores disponibles devueltos por la API.
+[OK] Permiso RUTAS:REASIGNAR sin cambios.
+[OK] Sin SQL nuevo.
+[OK] Sin cambio de flotas-api.
+
+VERSION: Web 4.3.57
