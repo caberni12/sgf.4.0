@@ -1,0 +1,11 @@
+SGF WEB 4.3.58 · REASIGNACION DE RUTAS ESTABLE
+
+Base: Web 4.3.57.
+Correcciones:
+- Web consulta opciones de reasignacion al servidor para usar el mismo conjunto de conductores que Android.
+- Filtro rapido por nombre, RUT, correo o ID.
+- La seleccion se envia explicitamente como CONDUCTOR_ID y NUEVO_CONDUCTOR_ID.
+- Motivo se envia como MOTIVO y MOTIVO_REASIGNACION.
+- Clave de idempotencia estable durante el intento.
+- Se exige confirmacion del servidor antes de mostrar exito.
+- Compatible con flotas-api 4.3.65 + SQL 4.3.65.

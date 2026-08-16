@@ -1,0 +1,19 @@
+SGF WEB 4.3.58 · VALIDACION REASIGNACION ESTABLE
+
+[OK] Base Web 4.3.57 conservada.
+[OK] Modulo funcional actualizado a sgf-module.4358.js.
+[OK] 24 HTML funcionales referencian sgf-module.4358.js.
+[OK] 0 referencias activas a sgf-module.4357.js / sgf-performance.4357.js / sw-sgf-4357.js.
+[OK] 14 archivos JavaScript: sintaxis Node --check sin errores.
+[OK] Bundle 4358 decodifica byte-a-byte igual al fuente validado.
+[OK] Modal de reasignacion conserva filtro rapido por nombre/RUT/correo/ID.
+[OK] Web obtiene conductores desde opcionesReasignacionRuta del servidor.
+[OK] Fallback compatible a listado generico solo para API antiguas sin la accion.
+[OK] Submit envia RUTA_ID, CONDUCTOR_ID y NUEVO_CONDUCTOR_ID.
+[OK] Submit envia MOTIVO y MOTIVO_REASIGNACION.
+[OK] Clave IDEMPOTENCY_KEY/CLAVE_EVENTO estable por intento de modal.
+[OK] Web exige confirmacion transaccional/fila de servidor antes de mostrar exito.
+[OK] No se modificaron reglas de GPS, Check-in, mapas ni aislamiento Multiempresa.
+
+REQUISITO DE SERVIDOR:
+Aplicar SQL 4.3.65 y desplegar flotas-api 4.3.65 para la correccion completa.
