@@ -1,0 +1,3 @@
+SGF Web 4.3.58 - produccion actual
+Copie el contenido de esta carpeta al hosting Web.
+Esta carpeta fue limpiada de changelogs historicos; conserva solo archivos de ejecucion, plantillas y configuracion necesaria.
