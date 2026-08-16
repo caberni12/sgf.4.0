@@ -270,3 +270,6 @@ body.dark .section-company-copy small{color:#b7c9c4}
   .modulo-reportes .report-gauge-grid{grid-template-columns:1fr!important}
   .modulo-reportes .report-dashboard-heading{padding:15px!important;flex-direction:column!important}
 }
+
+/* SGF Web 4.3.56 · Empresa conectada visible sobre el saludo */
+.dashboard-company-connected{display:block;margin-bottom:5px;font-size:12px;line-height:1.25;font-weight:800;letter-spacing:.02em;color:#0e8076;text-transform:none}

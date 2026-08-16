@@ -1,0 +1,13 @@
+SGF WEB 4.3.56 · AJUSTES UNIFICADOS WEB/ANDROID
+
+Subir TODO el contenido de esta carpeta al hosting Web reemplazando la 4.3.55.
+Después ejecutar Ctrl+F5 una vez.
+
+Cambios:
+- Notificaciones / Alertas / Auditoría: nunca Editar registro.
+- Login: lenguaje Base de Datos; sin proveedor ni URL visibles.
+- Check-In: Empresa + Patente + Conductor visibles y botón Imprimir Check-In PDF.
+- Panel principal: Empresa Conectada encima de Hola.
+- Performance Engine y Service Worker actualizados a 4.3.56.
+
+No requiere SQL nuevo ni cambio de flotas-api por estos cinco ajustes.

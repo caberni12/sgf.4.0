@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="responsive.css?v=4.3.30-ui">
   <link rel="stylesheet" href="interfaz-moderna.css?v=4.3.30-ui">
   <script src="tema.js?v=4.3.30-web"></script>
-  <link rel="stylesheet" href="sgf-final-4.3.44.css?v=web4344-reportes">
+  <link rel="stylesheet" href="sgf-final-4.3.44.css?v=web4356-unificado">
 </head>
 <body>
   <noscript><div class="aviso-sin-js">Debe habilitar JavaScript para iniciar sesión.</div></noscript>
@@ -56,7 +56,7 @@
           <input id="rutConexionEmpresa" name="rutEmpresaConexion" autocomplete="organization" inputmode="text" required placeholder="76.123.456-0">
         </label>
         <div class="estado-empresa-pendiente" id="estadoEmpresaPendiente" role="status" aria-live="polite">
-          <i>○</i><div><b>Conexión pendiente</b><span>La dirección del servicio permanecerá oculta.</span></div>
+          <i>○</i><div><b>Conexión pendiente</b><span>La configuración técnica de Base de Datos permanecerá protegida.</span></div>
         </div>
         <button class="boton-principal" id="botonConexionEmpresa" type="submit">Buscar y conectar</button>
         <small class="detalle-servicio">Solo se mostrará el nombre de la empresa y la confirmación de conexión.</small>
@@ -125,24 +125,24 @@
     <form method="dialog" id="formularioConexionAvanzada" class="conexion-avanzada-form">
       <div class="encabezado-formulario">
         <span class="etiqueta">RECUPERACIÓN DE CONEXIÓN</span>
-        <h2>Directorio de conexión</h2>
-        <p>Use esta opción solo cuando cambie la dirección del directorio. Quedará guardada en este dispositivo y ya no requiere modificar el código.</p>
+        <h2>Configuración de Base de Datos</h2>
+        <p>Use esta opción únicamente para recuperar la configuración empresarial autorizada de Base de Datos.</p>
       </div>
       <div class="mensaje-formulario oculto" id="mensajeConexionAvanzada" role="alert"></div>
-      <label class="campo"><span>Directorio oficial de conexión</span><input id="urlDirectorioAvanzada" name="urlDirectorio" type="url" inputmode="url" autocomplete="off" readonly aria-readonly="true"></label>
-      <label class="aceptacion-preconfig"><input id="confirmarCambioDirectorio" type="checkbox" required><span>Confirmo que esta dirección corresponde al directorio autorizado del sistema.</span></label>
+      <input id="urlDirectorioAvanzada" name="urlDirectorio" type="hidden">
+      <label class="aceptacion-preconfig"><input id="confirmarCambioDirectorio" type="checkbox" required><span>Confirmo que deseo aplicar la configuración autorizada de Base de Datos.</span></label>
       <div class="acciones-dialogo-conexion">
-        <button class="boton-enlace" id="restaurarDirectorio" type="button">Restaurar dirección predeterminada</button>
+        <button class="boton-enlace" id="restaurarDirectorio" type="button">Restaurar configuración de Base de Datos</button>
         <button class="boton-enlace" value="cancel" type="button" id="cerrarConexionAvanzada">Cancelar</button>
-        <button class="boton-principal" id="guardarConexionAvanzada" type="submit">Guardar conexión</button>
+        <button class="boton-principal" id="guardarConexionAvanzada" type="submit">Guardar configuración</button>
       </div>
-      <small class="detalle-servicio">La dirección queda guardada únicamente en este dispositivo. Al iniciar sesión, Administración puede sincronizar el perfil central.</small>
+      <small class="detalle-servicio">La configuración queda protegida en este dispositivo y se valida nuevamente antes de iniciar sesión.</small>
     </form>
   </dialog>
 
-  <script src="configuracion.4344.js?v=web4355-performance-cache"></script>
-  <script src="conexion.4344.js?v=web4355-performance-cache"></script>
-  <script src="acceso.4344.js?v=web4353"></script>
-  <script src="sgf-performance.4355.js?v=4.3.55"></script>
+  <script src="configuracion.4344.js?v=web4356-unificado"></script>
+  <script src="conexion.4344.js?v=web4356-unificado"></script>
+  <script src="acceso.4356.js?v=web4356-unificado"></script>
+  <script src="sgf-performance.4356.js?v=4.3.56"></script>
 </body>
 </html>

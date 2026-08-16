@@ -1,0 +1,34 @@
+SGF WEB 4.3.56 · VALIDACIÓN AJUSTES UNIFICADOS
+
+[OK] sgf-module.4356.js: wrapper generado desde fuente JavaScript validado.
+[OK] Fuente interna 4.3.56: sintaxis Node --check sin errores.
+[OK] acceso.4356.js: sintaxis sin errores.
+[OK] sgf-performance.4356.js: sintaxis sin errores.
+[OK] sw-sgf-4356.js: sintaxis sin errores.
+[OK] 27 HTML analizados con parser HTML: 0 errores.
+[OK] 24 páginas funcionales referencian sgf-module.4356.js.
+[OK] 0 páginas funcionales referencian sgf-module.4355.js.
+
+CONTROL 1 · SOLO LECTURA
+[OK] actions() bloquea Editar para notifications, alerts y audit.
+[OK] El modal genérico rechaza cualquier intento de editar esos tres recursos.
+[OK] Acciones operativas de marcar leída/cerrar alerta se conservan.
+
+CONTROL 2/3 · LOGIN
+[OK] El texto visible del login no contiene Supabase.
+[OK] El texto visible del login no contiene URL, URL real ni URL guardada.
+[OK] La interfaz utiliza el término Base de Datos.
+
+CONTROL 4 · CHECK-IN
+[OK] Formulario muestra Empresa asociada.
+[OK] Tablas muestran Patente, Conductor y Empresa.
+[OK] Detalle muestra Patente del vehículo, Conductor y Empresa asociada.
+[OK] Botón “Imprimir Check-In PDF” incluido.
+[OK] Impresión genera vista A4 y abre Imprimir / Guardar como PDF del navegador.
+
+CONTROL 5 · PANEL PRINCIPAL
+[OK] “Empresa Conectada: <nombre>” aparece encima de “Hola, <usuario>”.
+
+SEGURIDAD
+[OK] Se conserva aislamiento Multiempresa de mapas y filtros EMPRESA_ID.
+[OK] No se modificó SQL ni flotas-api para estos ajustes.
