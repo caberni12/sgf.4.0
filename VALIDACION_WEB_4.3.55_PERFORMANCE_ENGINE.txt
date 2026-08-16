@@ -1,0 +1,22 @@
+SGF WEB 4.3.55 · VALIDACIÓN PERFORMANCE ENGINE
+
+OK · Todas las páginas funcionales usan sgf-module.4355.js
+OK · Ninguna página referencia sgf-module.4354.js
+OK · Performance Engine cargado en páginas funcionales
+OK · Index carga Performance Engine 4.3.55
+OK · Main carga Performance Engine 4.3.55
+OK · Service Worker existe
+OK · Service Worker no cachea POST
+OK · Service Worker no intercepta otros orígenes
+OK · Service Worker excluye functions/v1
+OK · Caché incluye empresa_id
+OK · Caché incluye VERSION_PERMISOS
+OK · Permisos me máximo 5s
+OK · Persistencia negocio desactivada
+OK · Precarga excluye GPS/alertas/notificaciones/conexiones
+OK · Bundle conserva getEmpresaConexion para mapas
+OK · Bundle conserva filtro empresa en mapas
+OK · Performance usa quickLoad vía api.prefetch
+OK · Versión bundle 4.3.55
+
+TOTAL: 18 · OK: 18 · FALLAS: 0

@@ -588,8 +588,12 @@
   }
 
   function claveCache(action, payload = {}) {
-    const usuario = auth.user?.ID || auth.sessionId || (auth.token ? 'sesion' : 'publico');
-    return `${usuario}|${action}|${JSON.stringify(normalizarParaClave(payload))}`;
+    // Performance Engine 4.3.55: aislamiento estricto de caché por empresa + usuario + versión de permisos.
+    // Nunca una respuesta de una empresa puede reutilizarse en otra, incluso si el mismo correo/ID existe en ambas.
+    const empresa = String(conexionEmpresa?.empresa_id || auth.user?.EMPRESA_ID || 'SIN_EMPRESA').trim() || 'SIN_EMPRESA';
+    const usuario = String(auth.user?.ID || auth.sessionId || (auth.token ? 'sesion' : 'publico'));
+    const versionPermisos = String(auth.user?.VERSION_PERMISOS ?? '0');
+    return `${empresa}|${usuario}|P${versionPermisos}|${action}|${JSON.stringify(normalizarParaClave(payload))}`;
   }
 
   function politicaCache(action) {
@@ -605,7 +609,8 @@
         maxima: Math.max(15000, Number(config.CACHE_MAXIMA_ANTIGUEDAD_MILISEGUNDOS || 300000)),
       };
     }
-    if (action === 'me') return { vigente: 600000, maxima: 1800000 };
+    // La identidad/permisos no se mantiene congelada: máximo 5 s para respetar cambios activos.
+    if (action === 'me') return { vigente: 1500, maxima: 5000 };
     return {
       vigente: Number(config.CACHE_MODULOS_MILISEGUNDOS || 60000),
       maxima: Number(config.CACHE_MAXIMA_ANTIGUEDAD_MILISEGUNDOS || 300000),
