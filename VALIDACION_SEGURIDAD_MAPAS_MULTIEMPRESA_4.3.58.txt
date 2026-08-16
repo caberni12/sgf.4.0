@@ -1,0 +1,54 @@
+SGF 4.3.58 · VALIDACIÓN DE SEGURIDAD MAPAS / GPS MULTIEMPRESA
+Desarrollado por ING. ALEJANDRO SILVA
+
+RESULTADO DE REVISIÓN ESTÁTICA: APROBADO PARA DESPLIEGUE
+
+CAPA BASE / SQL
+[OK] empresa_id es la llave de aislamiento de la base REV9/REV10.
+[OK] SQL 4.3.58 agrega validación relacional de empresa en GPS, GPS_ACTUAL, CONEXIONES, CONEXIONES_ACTUAL, GEOCERCA_EVENTOS y GEOCERCA_ESTADO_ACTUAL.
+[OK] Se rechaza INSERT/UPDATE si usuario, conductor, vehículo, operación, ruta o sesión pertenecen a otra empresa.
+[OK] Registros históricos inconsistentes se ponen en cuarentena (eliminado='SI'); no se borran físicamente.
+[OK] GEOCERCA usa ON CONFLICT (empresa_id, conductor_id), compatible con REV9.
+[OK] Acceso directo a tablas de ubicación se revoca a anon/authenticated; service_role conserva CRUD.
+[OK] Se incorpora RPC de auditoría sgf_auditar_aislamiento_mapas_multiempresa().
+[OK] SQL no contiene DROP TABLE, TRUNCATE ni DELETE FROM.
+
+CAPA FLOTAS-API 4.3.58
+[OK] AsyncLocalStorage mantiene empresa por solicitud concurrente.
+[OK] Proxy db inyecta empresa_id/rut/nombre en INSERT/UPSERT y empresa_id en SELECT/UPDATE/DELETE.
+[OK] La sesión autenticada es la autoridad de empresa para CRUD.
+[OK] El Directorio Central se verifica contra empresa_id, RUT y URL real de flotas-api.
+[OK] Consultas principales de gps_actual, conexiones_actual y rastro gps tienen filtro explícito empresa_id.
+[OK] DTO/filas destinados a mapas se filtran de nuevo en modo fail-closed: fila sin empresa o empresa distinta se descarta.
+[OK] Salidas sintetizadas de mapas incorporan EMPRESA_ID/EMPRESA_RUT/EMPRESA_NOMBRE.
+[OK] Ubicación global continúa autorizada solo para SYSADMIN/Administrador/Gerencia en servidor.
+[OK] No se detectó uso dbRaw directo sobre GPS/Conexiones/Geocerca fuera de la capa aislada.
+[OK] TypeScript: sin errores de sintaxis TS1xxx. Diagnósticos restantes corresponden a resolución Deno/npm fuera del runtime Supabase y a un tipado preexistente de permisos.
+
+CAPA WEB 4.3.52
+[OK] 27 HTML totales; 24 páginas funcionales cargan sgf-module.4352.js.
+[OK] 0 referencias a sgf-module.4351.js en HTML.
+[OK] Bundle decodificado pasa node --check.
+[OK] Wrapper 4352 decodifica byte-a-byte al fuente validado.
+[OK] Función fail-closed compara EMPRESA_ID de cada fila con la empresa activa antes de dibujar marcadores/rastros/geocercas/conexiones.
+[OK] Tarjeta de respaldo de ruta y botón “Ver trazabilidad” conservados.
+[OK] No se detectaron accesos directos Supabase REST/PostgREST/createClient en Web.
+
+CAPA ANDROID 3.4.47 / versionCode 387
+[OK] Antes de abrir un mapa se exige empresa cifrada local y empresa autenticada; deben coincidir exactamente.
+[OK] Cada fila recibida para mapa debe traer EMPRESA_ID y coincidir; de lo contrario se descarta antes de RegistroMapaNativo.
+[OK] Ubicación global visible/directa restringida a Administrador/Gerencia; Operador no tiene acceso al GPS global.
+[OK] Conexiones en línea restringidas a Administrador/Gerencia; Geocerca a SYSADMIN/Administrador/Gerencia.
+[OK] No se detectó acceso directo Supabase REST/PostgREST/createClient en Java Android.
+[OK] 0 llamadas activas .esSupervisor(); esOperador() sigue siendo la API oficial.
+[OK] Gradle wrapper presente; versión 3.4.47 / 387 confirmada.
+[NOTA] APK no compilado en este entorno; no se afirma compilación binaria.
+
+CAPA ESCRITORIO 1.0.1
+[OK] Integra la misma Web 4.3.52 endurecida.
+[OK] 27 páginas conservan desktop-bridge.js; 24 páginas funcionales cargan 4352.
+[OK] Instalador NSIS único conservado en el proyecto fuente.
+[NOTA] Instalador .exe no compilado en este entorno Windows; el proyecto está listo para compilar.
+
+CONDICIÓN PARA LA GARANTÍA EN PRODUCCIÓN
+Deben estar aplicados los SQL incrementales 4.3.56/4.3.57 que correspondan y desplegarse juntos el SQL 4.3.58 + flotas-api 4.3.58; luego actualizar Web/Android/Escritorio según corresponda. Después ejecutar SQL_AUDITAR_MAPAS_MULTIEMPRESA_4.3.58_SOLO_LECTURA.sql. Todos los contadores *_inconsistentes y filas_sin_empresa deben ser 0.
