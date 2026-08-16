@@ -1,0 +1,12 @@
+SGF WEB 4.3.54 · VALIDACIÓN CORRECCIÓN MAPAS Y SINCRONIZACIÓN
+
+1. sgf-module.4354.js creado y validado por decodificación + node --check: OK
+2. 24 HTML funcionales apuntan a sgf-module.4354.js: OK
+3. Referencias HTML a sgf-module.4353.js: 0
+4. empresaActualMapaId usa api.getEmpresaConexion(), no la variable privada conexionEmpresa: OK
+5. Filtro fail-closed por EMPRESA_ID conservado: OK
+6. flotas-api 4.3.61 no requiere modificación: OK
+7. Error SINCRONIZACION_NO_COMPLETADA derivado del ReferenceError queda corregido al eliminar la excepción de mapa: OK
+8. Cache-buster nuevo web4354-correccion-mapas-scope: OK
+
+No se ejecutó SQL. No se modificó flotas-api. No se relajó seguridad Multiempresa.
