@@ -60,6 +60,11 @@
   let conexionEmpresa = cargarConexionEmpresa();
   const qrAuthorizations = new Map();
   const cacheRespuestas = new Map();
+  const cacheDirectorioAcceso = new Map();
+  const cacheServicioEmpresa = new Map();
+  const promesasDirectorioAcceso = new Map();
+  const promesasServicioEmpresa = new Map();
+  const VIGENCIA_VALIDACION_ACCESO_MS = 45 * 1000;
   const solicitudesPendientes = new Map();
   const accionesLectura = new Set(['status','me','dashboard','operationsSummary','reportsKpiSummary','reportsKpiDetail','list','assignmentAlerts','realtimeSummary','connectionsOnline','connectionTrackingLive','diagnoseSystem','officeQuickStatus','officeTasks','officeStatus','officeIncidents','getOperationalPoint','fuelSummary','connectionClientConfig','getConnectionConfig','testConnectionConfig','routeEvidenceImage','routeSyncState','backupCatalog','backupTable','profilePhoto']);
   const clientIpCacheKey = 'flotas_ip_publica_v1';
@@ -280,45 +285,43 @@
     return {};
   }
 
-  async function consultarDirectorioCentral(rut, claveInstalacion='') {
+  async function consultarDirectorioCentral(rut, claveInstalacion='', {forzar=false}={}) {
     if (!directorioEmpresasConfigurado()) throw new Error('DIRECTORIO_EMPRESAS_NO_CONFIGURADO');
-    const direccion = new URL(direccionDirectorioActual());
-    direccion.searchParams.set('accion', 'resolverConexion');
-    direccion.searchParams.set('rut', rut);
-    if (String(claveInstalacion || '').trim()) {
-      direccion.searchParams.set('claveInstalacion', String(claveInstalacion).trim());
+    const rutNormalizado=normalizarRutEmpresa(rut),conClave=Boolean(String(claveInstalacion||'').trim());
+    const cacheKey=`${rutNormalizado}|NORMAL`;
+    if(!conClave&&!forzar){
+      const cached=cacheDirectorioAcceso.get(cacheKey);
+      if(cached&&Date.now()-cached.time<=VIGENCIA_VALIDACION_ACCESO_MS)return cached.data;
+      if(promesasDirectorioAcceso.has(cacheKey))return promesasDirectorioAcceso.get(cacheKey);
     }
-    direccion.searchParams.set('_', String(Date.now()));
-
-    const controller = new AbortController();
-    const temporizador = setTimeout(
-      () => controller.abort(),
-      Number(config.TIEMPO_ESPERA_DIRECTORIO_MILISEGUNDOS || 18000)
-    );
-
-    try {
-      const response = await fetch(direccion.toString(), {
-        method:'GET',
-        headers:{'Accept':'application/json'},
-        cache:'no-store',
-        credentials:'omit',
-        redirect:'follow',
-        signal:controller.signal
-      });
-      let datos = null;
-      try { datos = await response.json(); } catch (_) {}
-      if (!response.ok || !datos || datos.ok !== true) {
-        throw new Error(String(datos?.error || `DIRECTORIO_HTTP_${response.status}`));
-      }
-      return datos;
-    } catch (error) {
-      if (error?.name === 'AbortError') throw new Error('TIEMPO_DE_ESPERA_DIRECTORIO');
-      const codigo = String(error?.message || '');
-      if (codigo && !codigo.startsWith('Failed to fetch')) throw error;
-      throw new Error('DIRECTORIO_EMPRESAS_NO_DISPONIBLE');
-    } finally {
-      clearTimeout(temporizador);
+    const ejecutar=(async()=>{
+      const direccion = new URL(direccionDirectorioActual());
+      direccion.searchParams.set('accion', 'resolverConexion');
+      direccion.searchParams.set('rut', rutNormalizado);
+      if (conClave) direccion.searchParams.set('claveInstalacion', String(claveInstalacion).trim());
+      direccion.searchParams.set('_', String(Date.now()));
+      const controller = new AbortController();
+      const temporizador = setTimeout(() => controller.abort(), Number(config.TIEMPO_ESPERA_DIRECTORIO_MILISEGUNDOS || 18000));
+      try {
+        const response = await fetch(direccion.toString(), {
+          method:'GET',headers:{'Accept':'application/json'},cache:'no-store',credentials:'omit',redirect:'follow',signal:controller.signal
+        });
+        let datos = null;try { datos = await response.json(); } catch (_) {}
+        if (!response.ok || !datos || datos.ok !== true) throw new Error(String(datos?.error || `DIRECTORIO_HTTP_${response.status}`));
+        if(!conClave)cacheDirectorioAcceso.set(cacheKey,{time:Date.now(),data:datos});
+        return datos;
+      } catch (error) {
+        if (error?.name === 'AbortError') throw new Error('TIEMPO_DE_ESPERA_DIRECTORIO');
+        const codigo = String(error?.message || '');
+        if (codigo && !codigo.startsWith('Failed to fetch')) throw error;
+        throw new Error('DIRECTORIO_EMPRESAS_NO_DISPONIBLE');
+      } finally { clearTimeout(temporizador); }
+    })();
+    if(!conClave&&!forzar){
+      promesasDirectorioAcceso.set(cacheKey,ejecutar);
+      try{return await ejecutar;}finally{if(promesasDirectorioAcceso.get(cacheKey)===ejecutar)promesasDirectorioAcceso.delete(cacheKey);}
     }
+    return await ejecutar;
   }
 
   function datosConexionDesdeDirectorio(respuesta, rutRespaldo='') {
@@ -359,25 +362,37 @@
     return { empresaId, nombre, rut, estado, url };
   }
 
-  async function comprobarServicioEmpresa(urlServicio) {
+  async function comprobarServicioEmpresa(urlServicio,{forzar=false}={}) {
     if (!urlHttpsValida(urlServicio)) throw new Error('CONEXION_EMPRESA_INVALIDA');
-    const controller = new AbortController();
-    const temporizador = setTimeout(() => controller.abort(), Number(config.TIEMPO_ESPERA_DIRECTORIO_MILISEGUNDOS || 18000));
-    try {
-      const response = await fetch(urlServicio, {
-        method:'POST',
-        headers:{'Content-Type':'application/json;charset=utf-8','Accept':'application/json',...cabecerasPublicasPara(urlServicio)},
-        body:JSON.stringify({accion:'salud', action:'salud', origen:'WEB'}),
-        cache:'no-store', redirect:'follow', signal:controller.signal
-      });
-      const datos = await response.json();
-      if (!response.ok || !datos || datos.ok !== true) throw new Error('CONEXION_EMPRESA_NO_DISPONIBLE');
-      return true;
-    } catch (error) {
-      if (error?.name === 'AbortError') throw new Error('TIEMPO_DE_ESPERA_DIRECTORIO');
-      if (String(error?.message || '') === 'CONEXION_EMPRESA_NO_DISPONIBLE') throw error;
-      throw new Error('CONEXION_EMPRESA_NO_DISPONIBLE');
-    } finally { clearTimeout(temporizador); }
+    const key=String(urlServicio).replace(/\/+$/,'');
+    if(!forzar){
+      const cached=cacheServicioEmpresa.get(key);
+      if(cached&&Date.now()-cached.time<=VIGENCIA_VALIDACION_ACCESO_MS)return true;
+      if(promesasServicioEmpresa.has(key))return promesasServicioEmpresa.get(key);
+    }
+    const ejecutar=(async()=>{
+      const controller = new AbortController();
+      const temporizador = setTimeout(() => controller.abort(), Number(config.TIEMPO_ESPERA_DIRECTORIO_MILISEGUNDOS || 18000));
+      try {
+        const response = await fetch(urlServicio, {
+          method:'POST',headers:{'Content-Type':'application/json;charset=utf-8','Accept':'application/json',...cabecerasPublicasPara(urlServicio)},
+          body:JSON.stringify({accion:'salud', action:'salud', origen:'WEB'}),cache:'no-store', redirect:'follow', signal:controller.signal
+        });
+        const datos = await response.json();
+        if (!response.ok || !datos || datos.ok !== true) throw new Error('CONEXION_EMPRESA_NO_DISPONIBLE');
+        cacheServicioEmpresa.set(key,{time:Date.now()});
+        return true;
+      } catch (error) {
+        if (error?.name === 'AbortError') throw new Error('TIEMPO_DE_ESPERA_DIRECTORIO');
+        if (String(error?.message || '') === 'CONEXION_EMPRESA_NO_DISPONIBLE') throw error;
+        throw new Error('CONEXION_EMPRESA_NO_DISPONIBLE');
+      } finally { clearTimeout(temporizador); }
+    })();
+    if(!forzar){
+      promesasServicioEmpresa.set(key,ejecutar);
+      try{return await ejecutar;}finally{if(promesasServicioEmpresa.get(key)===ejecutar)promesasServicioEmpresa.delete(key);}
+    }
+    return await ejecutar;
   }
 
   async function resolverConexionEmpresa(rutIngresado, claveInstalacion='') {
@@ -385,11 +400,11 @@
     if (!rutEmpresaValido(rut)) throw new Error('RUT_EMPRESA_INVALIDO');
 
     // PRIMERA PUERTA: Directorio central Supabase.
-    const respuesta = await consultarDirectorioCentral(rut, claveInstalacion);
+    const respuesta = await consultarDirectorioCentral(rut, claveInstalacion,{forzar:true});
     const remoto = datosConexionDesdeDirectorio(respuesta, rut);
 
     // SEGUNDA PUERTA: la URL real devuelta debe responder antes de guardarla.
-    await comprobarServicioEmpresa(remoto.url);
+    await comprobarServicioEmpresa(remoto.url,{forzar:true});
 
     const ahoraConexion = new Date().toISOString();
     guardarConexionEmpresaLocal({
@@ -413,7 +428,7 @@
     return obtenerConexionEmpresa();
   }
 
-  async function validarEmpresaActivaParaAcceso({forzar=false}={}) {
+  async function validarEmpresaActivaParaAcceso({forzar=false,comprobarServicio=true}={}) {
     if (!conexionEmpresa) throw new Error('CONEXION_EMPRESA_REQUERIDA');
 
     const empresaIdLocal = String(conexionEmpresa.empresa_id || '').trim();
@@ -426,7 +441,7 @@
 
     // Siempre se valida primero contra BDEMPRESAFLOTA.
     // No se permite entrar directamente usando una URL real almacenada antigua.
-    const respuesta = await consultarDirectorioCentral(normalizarRutEmpresa(rutLocal), '');
+    const respuesta = await consultarDirectorioCentral(normalizarRutEmpresa(rutLocal), '',{forzar});
     const remoto = datosConexionDesdeDirectorio(respuesta, rutLocal);
 
     if (remoto.empresaId !== empresaIdLocal) {
@@ -439,7 +454,7 @@
     // El Directorio central determina la URL real vigente.
     // empresa_id/rut/nombre permanecen como identidad local; solo URL/estado
     // se refrescan tras comprobar que el endpoint real está disponible.
-    await comprobarServicioEmpresa(remoto.url);
+    if(comprobarServicio)await comprobarServicioEmpresa(remoto.url,{forzar});
     guardarConexionEmpresaLocal({
       empresa_id:empresaIdLocal,
       empresa_rut:rutLocal,
@@ -552,6 +567,10 @@
 
   function limpiarCache() {
     cacheRespuestas.clear();
+    cacheDirectorioAcceso.clear();
+    cacheServicioEmpresa.clear();
+    promesasDirectorioAcceso.clear();
+    promesasServicioEmpresa.clear();
     solicitudesPendientes.clear();
     if (temporizadorPersistenciaCache) clearTimeout(temporizadorPersistenciaCache);
     temporizadorPersistenciaCache = null;

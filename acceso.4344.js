@@ -49,7 +49,7 @@
   function cambiarEstado(texto,tipo=''){estado.className=`estado-conexion ${tipo}`;$('span',estado).textContent=texto;}
   function bloquear(boton,activo,texto,normal){boton.disabled=activo;boton.textContent=activo?texto:normal;}
   function aplicarEmpresa(empresa){if(!empresa)return;window.TemaFlotas?.aplicarEmpresa?.(empresa,{guardar:true});const nombre=empresa.NOMBRE_FANTASIA||empresa.RAZON_SOCIAL||empresa.NOMBRE||'';const logo=empresa.DIRECCION_LOGOTIPO||'';if(nombre)$('#nombreEmpresaAcceso').textContent=nombre;if(logo)$('#logoEmpresaAcceso').src=logo;}
-  function entrar(){location.replace('main.html?v=4.3.44');}
+  function entrar(){location.replace('main.html?v=4.3.53');}
   function mostrarPreconfiguracion(){companyForm.classList.add('oculto');loginForm.classList.add('oculto');setupForm.classList.remove('oculto');cambiarEstado('Preconfiguración requerida','preconfig');$('#detalleServicio').textContent='Sin usuarios registrados';setTimeout(()=>setupForm.elements.nombreEmpresa?.focus(),80);}
   function mostrarAcceso(){companyForm.classList.add('oculto');setupForm.classList.add('oculto');loginForm.classList.remove('oculto');}
   function mostrarSeleccionEmpresa(){loginForm.classList.add('oculto');setupForm.classList.add('oculto');companyForm.classList.remove('oculto');setTimeout(()=>$('#rutConexionEmpresa')?.focus(),80);}
@@ -67,7 +67,7 @@
     aplicarConexionEmpresa(empresaConexion);
     cambiarEstado(`Validando empresa en Directorio central y conexión con ${api.backendLabel()}…`);
     try{
-      empresaConexion=await api.validarEmpresaActivaParaAcceso();
+      empresaConexion=await api.validarEmpresaActivaParaAcceso({comprobarServicio:false});
       aplicarConexionEmpresa(empresaConexion);
       const auth=api.getAuth();
       if(redirigir&&auth.token&&auth.user){cambiarEstado('Sesión guardada','conectado');entrar();return true;}
@@ -130,7 +130,24 @@
 
   loginForm.addEventListener('submit',async event=>{
     event.preventDefault();ocultarMensaje();if(!loginForm.reportValidity())return;bloquear(loginButton,true,'Ingresando…','Ingresar');
-    try{await api.validarEmpresaActivaParaAcceso();const datos=Object.fromEntries(new FormData(loginForm).entries());const ipPromise=api.getClientIp?.().catch(()=> '')||Promise.resolve('');const resultado=await api.request('login',datos);api.actualizarEstadoEmpresaLocal?.(resultado?.estadoEmpresa||resultado?.empresa?.ESTADO||'ACTIVA');api.setAuth({token:resultado.token,sessionId:resultado.sessionId||'',user:resultado.user,expiresAt:resultado.expiresAt||''});ipPromise.then(IP_PUBLICA=>api.registerConnectionIp?.({IP_PUBLICA})).catch(()=>{});cambiarEstado('Acceso correcto','conectado');mostrarMensaje('Sesión iniciada. Abriendo el panel principal…','exito');entrar();}
+    try{
+      const datos=Object.fromEntries(new FormData(loginForm).entries());
+      const ipPromise=api.getClientIp?.().catch(()=> '')||Promise.resolve('');
+      let resultado;
+      try{resultado=await api.request('login',datos);}
+      catch(errorInicial){
+        const codigo=String(api.authErrorCode?.(errorInicial)||errorInicial?.message||errorInicial||'').toUpperCase();
+        const recuperable=/EMPRESA_RUTA_API_NO_COINCIDE|DIRECTORIO_EMPRESAS_NO_DISPONIBLE|CONEXION_EMPRESA_NO_DISPONIBLE|RESPUESTA_NO_VALIDA|FAILED TO FETCH|TIEMPO_DE_ESPERA/.test(codigo);
+        if(!recuperable)throw errorInicial;
+        await api.validarEmpresaActivaParaAcceso({forzar:true,comprobarServicio:true});
+        resultado=await api.request('login',datos);
+      }
+      api.actualizarEstadoEmpresaLocal?.(resultado?.estadoEmpresa||resultado?.empresa?.ESTADO||'ACTIVA');
+      api.setAuth({token:resultado.token,sessionId:resultado.sessionId||'',user:resultado.user,expiresAt:resultado.expiresAt||''});
+      try{sessionStorage.setItem('sgf_login_rendimiento_ultimo',JSON.stringify(resultado?.rendimiento||{}));}catch(_){}
+      ipPromise.then(IP_PUBLICA=>api.registerConnectionIp?.({IP_PUBLICA})).catch(()=>{});
+      cambiarEstado('Acceso correcto','conectado');mostrarMensaje('Sesión iniciada. Abriendo el panel principal…','exito');entrar();
+    }
     catch(error){mostrarMensaje(textoError(error));cambiarEstado('Acceso no autorizado','error');$('#contrasenaAcceso').select();}
     finally{bloquear(loginButton,false,'Ingresando…','Ingresar');}
   });
