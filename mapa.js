@@ -1,4 +1,4 @@
-/* SGF Web 4.3.43 · Componente de mapas restaurado */
+/* SGF Web 4.3.62 · Componente de mapas restaurado + perfil Geo claro/rápido */
 (function () {
   'use strict';
 
@@ -20,6 +20,12 @@
   const PROVEEDORES_BALDOSAS = [
     (z,x,y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`,
     (z,x,y) => `https://a.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`,
+    (z,x,y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}`
+  ];
+  const PROVEEDORES_BALDOSAS_CLARO_RAPIDO = [
+    (z,x,y) => `https://a.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`,
+    (z,x,y) => `https://b.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`,
+    (z,x,y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`,
     (z,x,y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}`
   ];
 
@@ -48,6 +54,7 @@
       this.contenedor = contenedor;
       this.centro = Array.isArray(opciones.centro) && coordenadasValidas(opciones.centro[0], opciones.centro[1]) ? opciones.centro.map(numeroMapa) : [-33.4489, -70.6693];
       this.nivel = limitar(Number(opciones.nivel || 12), 3, 19);
+      this.proveedoresBaldosas = opciones.estilo === 'claro-rapido' ? PROVEEDORES_BALDOSAS_CLARO_RAPIDO : PROVEEDORES_BALDOSAS;
       this.marcadores = [];
       this.circulos = [];
       this.rastros = [];
@@ -160,7 +167,7 @@
       const nuevos = [...unicos.values()];
       const firma = JSON.stringify(nuevos.map(item => [
         item.id || '', Number(item.latitud), Number(item.longitud), item.nombre || '', item.direccion || '',
-        Boolean(item.activo), Boolean(item.seguido), item.detalle || '', item.acciones || '', item.imagen || ''
+        Boolean(item.activo), Boolean(item.seguido), item.clase || '', item.detalle || '', item.acciones || '', item.imagen || ''
       ]));
       const sinCambios = firma === this.firmaMarcadores;
       this.firmaMarcadores = firma;
@@ -195,7 +202,7 @@
         ...item,
         puntos:(item.puntos || []).filter(punto =>
           coordenadasValidas(punto.latitud, punto.longitud)
-        ).slice(-40)
+        ).slice(-Math.max(2,Math.min(Number(item.maxPuntos||40),2000)))
       })).filter(item => item.puntos.length > 1);
       const firma = JSON.stringify(nuevos.map(item => [item.id || '', item.clase || '', item.puntos.map(punto => [Number(punto.latitud), Number(punto.longitud)])]));
       if (firma === this.firmaRastros && this.vistaActual) return;
@@ -279,17 +286,19 @@
           imagen.alt = '';
           imagen.draggable = false;
           imagen.loading = 'eager';
+          imagen.decoding = 'async';
+          try { imagen.fetchPriority = 'high'; } catch (_) {}
           imagen.referrerPolicy = 'origin-when-cross-origin';
           imagen.dataset.mapaX = String(x);
           imagen.dataset.mapaY = String(y);
           let proveedor = 0;
-          const cargarProveedor = () => { imagen.src = PROVEEDORES_BALDOSAS[proveedor](this.nivel,xNormalizado,y); };
+          const cargarProveedor = () => { imagen.src = this.proveedoresBaldosas[proveedor](this.nivel,xNormalizado,y); };
           imagen.style.left = `${x * TAMANO_BALDOSA - izquierda}px`;
           imagen.style.top = `${y * TAMANO_BALDOSA - arriba}px`;
           imagen.addEventListener('load', () => imagen.classList.remove('error-baldosa'));
           imagen.addEventListener('error', () => {
             proveedor += 1;
-            if (proveedor < PROVEEDORES_BALDOSAS.length) cargarProveedor();
+            if (proveedor < this.proveedoresBaldosas.length) cargarProveedor();
             else imagen.classList.add('error-baldosa');
           });
           cargarProveedor();
@@ -397,7 +406,7 @@
         const firmaContenido = `${item.activo ? '1' : '0'}|${item.seguido ? '1' : '0'}|${item.nombre || ''}|${item.direccion || ''}|${item.detalle || ''}|${item.acciones || ''}|${item.imagen || ''}`;
         if (boton.dataset.firmaContenido !== firmaContenido) {
           const abierto = boton.classList.contains('abierto');
-          boton.className = `mapa-marcador ${item.activo ? 'activo' : 'antiguo'} ${item.seguido ? 'seguido' : ''} ${abierto ? 'abierto' : ''}`.trim();
+          boton.className = `mapa-marcador ${item.activo ? 'activo' : 'antiguo'} ${item.seguido ? 'seguido' : ''} ${item.clase || ''} ${abierto ? 'abierto' : ''}`.trim();
           const direccion=String(item.direccion||'').trim();
           boton.setAttribute('aria-label', `Ubicación de ${item.nombre || 'conductor'}${direccion?`, en ${direccion}`:''}`);
           boton.title=direccion||item.nombre||'Ubicación';

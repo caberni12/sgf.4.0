@@ -52,7 +52,7 @@ iframe{max-width:100%}
   .presentacion-acceso{padding-bottom:20px!important}
   .mensaje-acceso{margin-top:22px!important}
   .mensaje-acceso p{display:none}
-  .tarjeta-acceso{padding:22px 18px!important;border-radius:18px!important;box-shadow:0 16px 42px rgba(12,62,57,.12)}
+  .tarjeta-acceso{padding:22px 18px!important;border-radius:18px!important;box-shadow:0 16px 42px rgba(0, 0, 0, .12)}
   .encabezado-formulario h2{font-size:27px!important}
   .estado-conexion{align-items:flex-start}
   .boton-principal,.boton-enlace{width:100%}

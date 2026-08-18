@@ -48,8 +48,8 @@
   function ocultarMensaje(destino=mensaje){destino.className='mensaje-formulario oculto';destino.textContent='';}
   function cambiarEstado(texto,tipo=''){estado.className=`estado-conexion ${tipo}`;$('span',estado).textContent=texto;}
   function bloquear(boton,activo,texto,normal){boton.disabled=activo;boton.textContent=activo?texto:normal;}
-  function aplicarEmpresa(empresa){if(!empresa)return;window.TemaFlotas?.aplicarEmpresa?.(empresa,{guardar:true});const nombre=empresa.NOMBRE_FANTASIA||empresa.RAZON_SOCIAL||empresa.NOMBRE||'';const logo=empresa.DIRECCION_LOGOTIPO||'';if(nombre)$('#nombreEmpresaAcceso').textContent=nombre;if(logo)$('#logoEmpresaAcceso').src=logo;}
-  function entrar(){location.replace('main.html?v=4.3.59');}
+  function aplicarEmpresa(empresa){if(!empresa)return;window.TemaFlotas?.aplicarEmpresa?.(empresa,{guardar:true});const nombre=empresa.NOMBRE_FANTASIA||empresa.RAZON_SOCIAL||empresa.NOMBRE||'';if(nombre)$('#nombreEmpresaAcceso').textContent=nombre;const marca=$('#logoEmpresaAcceso');if(marca){marca.src='efleet-mark-compact.png';marca.onerror=()=>{marca.onerror=null;marca.src='logo.svg';};}}
+  function entrar(){location.replace('main.html?v=4.3.61');}
   function mostrarPreconfiguracion(){companyForm.classList.add('oculto');loginForm.classList.add('oculto');setupForm.classList.remove('oculto');cambiarEstado('Preconfiguración requerida','preconfig');$('#detalleServicio').textContent='Sin usuarios registrados';setTimeout(()=>setupForm.elements.nombreEmpresa?.focus(),80);}
   function mostrarAcceso(){companyForm.classList.add('oculto');setupForm.classList.add('oculto');loginForm.classList.remove('oculto');}
   function mostrarSeleccionEmpresa(){loginForm.classList.add('oculto');setupForm.classList.add('oculto');companyForm.classList.remove('oculto');setTimeout(()=>$('#rutConexionEmpresa')?.focus(),80);}
@@ -103,7 +103,7 @@
       indicador.querySelector('i').textContent='✓';
       indicador.querySelector('b').textContent='Conexión establecida';
       indicador.querySelector('span').textContent=`${empresa.nombre} · RUT ${empresa.rut}`;
-      indicador.style.borderColor='#bce4d7';indicador.style.background='#edf9f5';
+      indicador.style.borderColor='#dbdbdb';indicador.style.background='#edf9f5';
       mostrarMensaje('Empresa validada. La configuración de Base de Datos quedó guardada y será revalidada antes de cada acceso.','exito',mensajeEmpresa);
       // La validación empresarial solo habilita el formulario. El usuario
       // siempre debe escribir sus credenciales para iniciar una sesión nueva.
