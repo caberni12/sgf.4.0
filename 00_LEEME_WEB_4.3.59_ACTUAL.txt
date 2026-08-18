@@ -1,0 +1,10 @@
+SGF · Web 4.3.59 · GEO PLANIFICACION DE LOCALES
+
+Incluye módulos Web reales:
+- GEO LOCAL (Supervisor)
+- GEO LOCAL ADMIN (Administrador/Gerencia)
+- MAPA GEO LOCAL (cuarto mapa)
+- KPI GEO LOCALES
+- Malla de turnos individual con impresión/PDF y acceso directo desde Usuarios.
+
+Requiere flotas-api 4.3.68 y SQL GEO LOCAL 4.3.68.

@@ -1,8 +1,9 @@
-const SGF_CACHE='sgf-static-4.3.58-v1';
+const SGF_CACHE='sgf-static-4.3.59-v1';
 const PRECACHE=[
   './','./index.html','./main.html','./logo.svg','./tema.js','./estilos.css','./responsive.css','./interfaz-moderna.css',
   './menu-principal.css','./sgf-final-4.3.44.css','./sgf-performance.4358.js','./sgf-module.4358.js','./sgf-shell.4344.js',
-  './panel-principal.html','./rutas.html','./operaciones.html','./checkin-vehicular.html','./vehiculos.html','./conductores.html'
+  './panel-principal.html','./rutas.html','./operaciones.html','./checkin-vehicular.html','./vehiculos.html','./conductores.html',
+  './geo-local.html','./geo-local-admin.html','./mapa-geo-local.html','./kpi-geo-locales.html','./malla-turnos.html','./geo-local.css','./geo-local-common.js'
 ];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(SGF_CACHE).then(async cache=>{
